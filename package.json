@@ -1,0 +1,26 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Amazon-like app utilizing a MySQL database",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "bamazonCustomer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheKingdomDev/Bamazon.git"
+  },
+  "keywords": [
+    "bamazon"
+  ],
+  "author": "Eric King",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheKingdomDev/Bamazon/issues"
+  },
+  "homepage": "https://github.com/TheKingdomDev/Bamazon#readme",
+  "dependencies": {
+    "inquirer": "^3.0.6",
+    "mysql": "^2.13.0"
+  }
+}
