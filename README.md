@@ -25,7 +25,7 @@ After cloning the repository and installing MySQL workbench on your machine run 
     1. Microsoft Visual Studio
 
 ## Authors
-    * **Eric King**
+    **Eric King**
 
 ## Acknowledgments
 
