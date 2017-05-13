@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
     port: 3306,
     user: "root",
     password: "",
-    database: Bamazon_DB
+    database: "Bamazon_DB"
 });
 
 connection.connect(function(err) {
@@ -24,43 +24,45 @@ var start = function() {
         message: "Hello, are you a [customer] or [admin]",
         choices: ["customer", "admin"]
     }).then(function(answer) {
-        if(answer.customerOrAdmin.toLowerCase() === "customer") {
-            getOrder();
+        if(answer.customerOrAdmin === "customer") {
+           	showStore();
         } else {
             admin();
         }
     });
 };
 
-//function to show the storefront for the customer
+// function to show the storefront for the customer
 
-// var showStore = function() {
-//     connection.query("SELECT * FROM products", function(err, result) {
-//         if (err) throw err;
+var showStore = function() {
+    //display all prducts availabe for sale
+	console.log(" ");
+	console.log("Welcome to My Store");
+	console.log(" ");
+	console.log("******************************");
+	console.log("Available Products");
+	console.log("******************************");
+	console.log(" ");
 
-//         inquirer.prompt([
-//             {
-//                 name: "choice",
-//                 type: "rawlist",
-//                 choices: function() {
-//                     var choiceArray = [];
-//                     for (var i = 0; i < results.length; i++) {
-//                         choiceArray.push(result[i].item_id, result[i].product_name, result[i].price);
-//                     }
-//                     return choiceArray;
-//                 },
-//                 message: "Which item would you like to buy?"
-//             }
-//         ])
-//     }).then(function(answer) {
-//         var chosenProduct;
-//         for(var i = 0;i < result.length; i++) {
-//             if(result[i].product_name === answer.choice) {
-//                 chosenProduct = result[i];
-//             }
-//         }
-//     });
-// }
+	showProducts();
+};
+
+function showProducts(res){
+	connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
+		console.log("ID | Name | Department | Price(USD) | Stock Quantity");
+
+		var availableProducts = [];
+		
+		for(var i = 0; i < res.length; i++) {
+			var productObj = {'id': res[i].ID, 'product': res[i].product_name, 'price': "$" + res[i].price.toFixed(2)};
+			availableProducts.push(productObj);
+		}
+		console.log(availableProducts);
+        });
+	
+		getOrder();
+};
 
 // gets the information of a product from user
 function getOrder(){
@@ -78,10 +80,10 @@ function getOrder(){
 function processOrder(productID,quantity){
 	//new available quantity after customer order
 	var availableQuantity,price;
-	connection.query('SELECT stock_quantity,price FROM products WHERE ?',{itemID:productID},function(err,results){
+	connection.query('SELECT stock_quantity,price FROM products WHERE ?',{ID:productID},function(err,res){
 		if(err) throw err;
-		availableQuantity = results[0].stock_quantity;
-		price = parseInt(results[0].price);
+		availableQuantity = res[0].stock_quantity;
+		price = parseInt(res[0].price);
 
 		//check enough stock is available to place order
 		if(availableQuantity < quantity){
@@ -91,8 +93,8 @@ function processOrder(productID,quantity){
 
 		var quantityRemaining = availableQuantity - quantity;
 
-		// updates products table(stockQuantity column) and departments table(total Sales column)
-				connection.query('UPDATE products,departments SET products.StockQuantity = ? , departments.TotalSales = departments.TotalSales + ? WHERE products.item_iD = ? AND products.DepartmentName = departments.DepartmentName',[quantityRemaining, price*quantity,productID],function(err){
+		// updates products table(stockQuantity column)
+				connection.query("UPDATE products SET products.stock_quantity = ?",[quantityRemaining, price*quantity,productID],function(err){
 				if(err) throw err;
 			
 				console.log('The total cost of purchase is $', price*quantity);
