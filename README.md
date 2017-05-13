@@ -18,14 +18,14 @@ MySql
 
 After cloning the repository and installing MySQL workbench on your machine run the following commands.
 
-    *npm install*
-    *node bamazonCustomer*
+    npm install
+    node bamazonCustomer
 
 ## Built With
     1. Microsoft Visual Studio
 
 ## Authors
-    **Eric King**
+    Eric King
 
 ## Acknowledgments
 
